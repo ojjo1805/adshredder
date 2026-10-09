@@ -15,6 +15,12 @@ Use these pre-crafted details when creating your new item in the [Chrome Web Sto
 * **Category:**  
   `Productivity` (or `Workflow & Planning` / `Search Tools`)
 
+* **Privacy Policy URL:**  
+  `https://github.com/ojjo1805/adshredder/blob/main/PRIVACY_POLICY.md`
+
+* **Support / Website URL:**  
+  `https://github.com/ojjo1805/adshredder`
+
 ---
 
 ## 2. Detailed Store Description (Copy & Paste)
