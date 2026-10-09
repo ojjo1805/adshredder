@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AdShredder by Mojo</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="header">
+      <div class="brand">
+        <div class="logo-badge">⚡</div>
+        <div>
+          <h1 class="title">AdShredder</h1>
+          <span class="subtitle">by Mojo</span>
+        </div>
+      </div>
+      <label class="switch" title="Global Master Toggle">
+        <input type="checkbox" id="master-toggle" checked>
+        <span class="slider round"></span>
+      </label>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav class="nav-tabs">
+      <button class="tab-btn active" data-tab="tab-shield">🛡️ Shield</button>
+      <button class="tab-btn" data-tab="tab-rules">📋 Rules</button>
+      <button class="tab-btn highlight" data-tab="tab-support">☕ Support</button>
+    </nav>
+
+    <!-- TAB 1: SHIELD / DASHBOARD -->
+    <section id="tab-shield" class="tab-content active">
+      <!-- Current Site Card -->
+      <div class="card domain-card">
+        <div class="domain-info">
+          <span class="domain-label">Current Site</span>
+          <span class="domain-name" id="current-domain">Detecting...</span>
+        </div>
+        <div class="domain-actions">
+          <label class="switch small" title="Toggle Protection on this site">
+            <input type="checkbox" id="domain-toggle" checked>
+            <span class="slider round"></span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Action Button: Element Picker -->
+      <button class="action-btn shred-btn" id="btn-start-picker">
+        <span class="icon">🎯</span>
+        <span class="text">Shred an Element on this Page</span>
+      </button>
+
+      <!-- Stats Grid -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <span class="stat-number" id="stat-ads">0</span>
+          <span class="stat-title">Ads Shredded</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-number" id="stat-popups">0</span>
+          <span class="stat-title">Popups Blocked</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-number" id="stat-elements">0</span>
+          <span class="stat-title">Custom Hidden</span>
+        </div>
+      </div>
+
+      <!-- Quick Report Button -->
+      <div class="report-row">
+        <button class="btn-report" id="btn-open-report">
+          <span class="report-icon">🚩</span>
+          <span class="report-text">Report broken site or slipped ad</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Report Modal Overlay -->
+    <div class="report-modal-overlay" id="report-modal" style="display: none;">
+      <div class="report-modal-content">
+        <div class="report-modal-header">
+          <h4>Report an Issue 🚩</h4>
+          <button class="btn-close-modal" id="btn-close-report">✕</button>
+        </div>
+        <p class="report-modal-desc">
+          Is an ad slipping through or is a website broken on <strong id="report-target-domain">this site</strong>?
+        </p>
+        <div class="report-options">
+          <button class="report-option-btn github-report" id="btn-report-github">
+            <span class="opt-icon">🐙</span>
+            <div class="opt-text">
+              <strong>Open GitHub Issue</strong>
+              <small>Auto-fills domain and template for Mojo & AI</small>
+            </div>
+          </button>
+          <button class="report-option-btn kofi-report" id="btn-report-kofi">
+            <span class="opt-icon">☕</span>
+            <div class="opt-text">
+              <strong>Send Message via Ko-fi</strong>
+              <small>No GitHub account required</small>
+            </div>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: RULES MANAGEMENT -->
+    <section id="tab-rules" class="tab-content">
+      <div class="section-title">Custom Shredded on this Site</div>
+      <div class="rules-list" id="custom-rules-container">
+        <div class="empty-state">No custom elements shredded on this site yet.</div>
+      </div>
+      <button class="btn-clear-rules" id="btn-clear-domain-rules">Clear Rules on this Site</button>
+
+      <div class="section-title" style="margin-top: 16px;">Whitelisted Sites</div>
+      <div class="whitelist-container" id="whitelist-container">
+        <div class="empty-state">No sites whitelisted. Protection is active everywhere.</div>
+      </div>
+    </section>
+
+    <!-- TAB 3: SUPPORT & DONATIONS FOR MOJO -->
+    <section id="tab-support" class="tab-content">
+      <div class="support-hero">
+        <h3>Support Mojo ☕</h3>
+        <p>AdShredder is completely <strong>free, open-source & ad-free</strong>. If it saved your sanity from intrusive ads and popups, any support helps keep the project alive!</p>
+      </div>
+
+      <!-- Ko-fi / Coffee Button -->
+      <a href="https://ko-fi.com/mojo1805" target="_blank" class="donation-btn kofi-btn" id="btn-kofi">
+        <span>☕</span>
+        <span>Buy Mojo a Coffee (Ko-fi)</span>
+      </a>
+
+      <!-- NOWPayments / Multi-Crypto Portal -->
+      <a href="https://nowpayments.io/donation/adshredder_mojo" target="_blank" class="donation-btn nowpayments-btn" id="btn-nowpayments">
+        <span>💎</span>
+        <span>Donate with Crypto (DOGE, BTC & 300+)</span>
+      </a>
+
+      <!-- Crypto Wallet Cards -->
+      <div class="crypto-section">
+        <span class="crypto-header">Crypto Tip Jar</span>
+        
+        <!-- Bitcoin -->
+        <div class="crypto-card">
+          <div class="crypto-meta">
+            <span class="crypto-symbol btc">₿ BTC</span>
+            <span class="crypto-network">Bitcoin Network</span>
+          </div>
+          <div class="crypto-address-row">
+            <input type="text" readonly value="bc1qcudwfqpsjqlrwqrn8qrmuyl2tg4nmcnyv27nx4" class="crypto-input" id="btc-addr">
+            <button class="btn-copy" data-target="btc-addr">Copy</button>
+          </div>
+        </div>
+
+        <!-- Ethereum / EVM -->
+        <div class="crypto-card">
+          <div class="crypto-meta">
+            <span class="crypto-symbol eth">Ξ ETH / USDT</span>
+            <span class="crypto-network">Ethereum / Arbitrum / Polygon</span>
+          </div>
+          <div class="crypto-address-row">
+            <input type="text" readonly value="0x0daCbcc3B449e3bD7f49ED64F85C16a271fA7f06" class="crypto-input" id="eth-addr">
+            <button class="btn-copy" data-target="eth-addr">Copy</button>
+          </div>
+        </div>
+
+        <!-- Solana -->
+        <div class="crypto-card">
+          <div class="crypto-meta">
+            <span class="crypto-symbol sol">◎ SOL</span>
+            <span class="crypto-network">Solana Network</span>
+          </div>
+          <div class="crypto-address-row">
+            <input type="text" readonly value="AAY9oCC2rKKzofpJvPw2ocnqJPTg26AMaBhDTqxJE3F3" class="crypto-input" id="sol-addr">
+            <button class="btn-copy" data-target="sol-addr">Copy</button>
+          </div>
+        </div>
+
+        <!-- Dogecoin -->
+        <div class="crypto-card">
+          <div class="crypto-meta">
+            <span class="crypto-symbol doge">🐕 DOGE</span>
+            <span class="crypto-network">Dogecoin Network</span>
+          </div>
+          <div class="crypto-address-row">
+            <input type="text" readonly value="DDwXee7WVSwDayUqe7x3PN5nXeuKMyDj3p" class="crypto-input" id="doge-addr">
+            <button class="btn-copy" data-target="doge-addr">Copy</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <span>AdShredder v1.0.0</span>
+      <span class="status-indicator" id="footer-status">⚡ Active Protection</span>
+    </footer>
+  </div>
+
+  <script type="module" src="popup.ts"></script>
+</body>
+</html>
