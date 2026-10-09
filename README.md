@@ -2,6 +2,10 @@
 
 > **Ultra-fast ad, popup and video ad shredder with an interactive element picker, zero bloat and 100% privacy.**
 
+<p align="center">
+  <img src="store_assets/promo_banner_16x9.jpg" alt="AdShredder by Mojo" width="100%" />
+</p>
+
 [![Manifest V3](https://img.shields.io/badge/Manifest-V3-06b6d4?style=for-the-badge&logo=googlechrome&logoColor=white)](https://developer.chrome.com/docs/extensions/mv3/intro/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178c6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Vite](https://img.shields.io/badge/Built%20with-Vite-646cff?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
