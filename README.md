@@ -52,7 +52,7 @@ Built using a closed Shadow DOM overlay in Electric Teal styling:
 ## 🛠️ Installation & Development
 
 ### For Users
-Install directly with 1 click from the [Chrome Web Store](https://chrome.google.com/webstore) *(link coming soon)*.
+Install directly with 1 click from the [Chrome Web Store](https://chromewebstore.google.com/detail/adshredder-by-mojo/fhopbflmgfahghekojgpfingpahlmbde) *(Publishing in progress)*.
 
 ### For Developers (Manual / Unpacked)
 1. Clone this repository:
