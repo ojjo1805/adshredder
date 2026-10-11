@@ -93,12 +93,20 @@
   [id^="seedtag_"],
 
   /* ==========================================================================
-     4. International Regional Ad Networks (China, JP, KR, MENA, RU, India)
+     4. International Regional Ad Networks (Worldwide: CN, JP, KR, MENA, IR, IN, PK, SG, VN, TR, Eastern Europe)
      ========================================================================== */
+  /* China (Baidu, Alibaba Alimama/Tanx, Tencent, Sogou) */
   [id^="BAIDU_SSP_"],
   [id^="cpro_"],
   [class*="baidu-ad"],
-  [id*="tanx-"],
+  [id^="tanx-"],
+  [id^="alimama_"],
+  [class^="alimama-"],
+  [id^="tencent_ad_"],
+  [class^="tencent-ad-"],
+  [id^="sogou_"],
+
+  /* Japan & Korea (Yahoo Japan, MicroAd, Kakao AdFit, Naver, Dable) */
   .yads_banner,
   [id^="ad-yahoo"],
   [class*="microad"],
@@ -112,20 +120,83 @@
   .dable-widget,
   [id^="dable-"],
   [id^="dable_"],
-  [id^="yandex_ad_"],
-  [id^="yandex_rtb_"],
-  [class*="yandex-adaptive"],
+
+  /* Arabic / MENA (Speakol, Jubna, Hasoub, Mawdoo3) */
   [class^="speakol-"],
   [id^="speakol-"],
   [class^="jubna-"],
   [id^="jubna-"],
+  [id^="hasoub_"],
+  [class^="hasoub-"],
+  [class^="mawdoo3-ad-"],
+
+  /* Persian / Iran (Yektanet, SabaVision, MediaAd, Kaprila, Tapsell) */
   [class^="yektanet-"],
   [id^="yektanet-"],
   [class^="sabavision-"],
   [id^="sabavision-"],
   [class^="mediaad-"],
+  [id^="mediaad-"],
+  [id^="kaprila-"],
+  [class^="kaprila-"],
+  [class^="tapsell-ad-"],
+  [id^="tapsell-"],
+
+  /* India, Pakistan & Urdu (Times Colombia, InMobi, Media.net, SVG Media) */
   [id^="clmb_"],
   .clmb-ad-widget,
+  [id^="colombia_"],
+  [id^="svg_ad_"],
+  [class^="inmobi-ad-"],
+  [id^="inmobi-"],
+  [id^="medianet_"],
+  [class^="medianet-ad"],
+
+  /* Singapore & Southeast Asia (Innity, InSkin, AnyMind/AdAsia) */
+  [id^="innity_"],
+  [class^="innity-"],
+  [class^="inskin-"],
+  [id^="inskin-"],
+  [class^="adasia-"],
+  [id^="adasia-"],
+
+  /* Vietnam (Admicro, eClick, Ambient, VietAd) */
+  [id^="adm_"],
+  [class^="admicro-"],
+  [id^="eclick_"],
+  [class^="eclick-"],
+  [id^="ambient_ad_"],
+  [class^="vietad-"],
+
+  /* Turkey (Reklamport, GelirOrtakları, Hürriyet Ad) */
+  [id^="reklamport_"],
+  [class^="reklamport-"],
+  [id^="hurriyet_ad_"],
+  .reklam-alani,
+  .reklam-kutusu,
+  .reklam-banner,
+  [class^="reklam-alani"],
+
+  /* Eastern Europe: Poland, Czech, Hungary, Romania, Russia (Yandex, Onet, WP, Seznam/Sklik, Indamail) */
+  [id^="yandex_ad_"],
+  [id^="yandex_rtb_"],
+  [class*="yandex-adaptive"],
+  [id^="onet-ad-"],
+  [class^="onet-ad-"],
+  .reklama-onet,
+  [id^="wp-ad-"],
+  [class^="wp-ad-"],
+  .reklama-wp,
+  .reklamowy-boks,
+  [id^="sklik_"],
+  [class^="sklik-"],
+  [id^="seznam_ad_"],
+  [id^="inda_ad_"],
+  .reklam-doboz,
+  .reklam-sav,
+  .reclama-banner,
+  .reclama-box,
+  [id^="reclama-"],
 
   /* ==========================================================================
      5. Native Ad / Recommendation Widgets (Taboola, Outbrain, etc.)
