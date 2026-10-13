@@ -71,8 +71,8 @@ Install directly with 1 click from the [Chrome Web Store](https://chromewebstore
 
 AdShredder is completely free and open source. If it saves your sanity while browsing and you want to support independent development:
 
-- ☕ **Ko-fi:** [https://ko-fi.com/mojo1805](https://ko-fi.com/mojo1805)
-- 💎 **Crypto Portal:** [https://nowpayments.io/donation/adshredder_mojo](https://nowpayments.io/donation/adshredder_mojo)
+- **Ko-fi:** [https://ko-fi.com/mojo1805](https://ko-fi.com/mojo1805)
+- **Crypto Portal:** [https://nowpayments.io/donation/adshredder_mojo](https://nowpayments.io/donation/adshredder_mojo)
 
 Direct Wallets:
 - **BTC:** `bc1qcudwfqpsjqlrwqrn8qrmuyl2tg4nmcnyv27nx4`
