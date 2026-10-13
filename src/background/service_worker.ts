@@ -1,13 +1,13 @@
 /**
- * AdShredder by Mojo - Background Service Worker
- * Stateless, event-driven background engine for Manifest V3.
+ * AdShredder - Background Service Worker
+ * Handles storage defaults, badge counts, and DNR ruleset toggling.
  */
 
 import { DNRManager } from './dnr_manager';
 
-// Initialize defaults on install
+// Set up storage defaults on first install
 chrome.runtime.onInstalled.addListener(async () => {
-  console.log('[AdShredder by Mojo] 🚀 Extension installed. Initializing engine...');
+  console.log('[AdShredder] Service worker initialized');
   const data = await chrome.storage.local.get([
     'master_enabled',
     'stats_total_ads',

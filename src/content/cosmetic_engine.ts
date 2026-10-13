@@ -1,7 +1,6 @@
 /**
- * AdShredder by Mojo - Cosmetic Engine & Isolated Content Script
- * Manages element hiding (both built-in and user-custom),
- * communicates with background service worker, and coordinates the visual Element Picker.
+ * AdShredder - Cosmetic Engine
+ * Injects CSS rules to collapse ad wrappers and manages custom element picker rules.
  */
 
 import { ElementPicker } from './element_picker';
@@ -360,6 +359,7 @@ export const BUILTIN_COSMETIC_RULES: string[] = [
   '[aria-label="publicité" i]',
   '[aria-label="publicidad" i]',
   '[aria-label="реклама" i]',
+  // Reddit promoted posts and comment thread ads (Fix for Issue #1)
   'shreddit-ad-post',
   'shreddit-comments-page-ad',
   '.shreddit-comments-page-ad',
@@ -381,7 +381,7 @@ export const BUILTIN_COSMETIC_RULES: string[] = [
   let pickerInstance: ElementPicker | null = null;
   let styleTag: HTMLStyleElement | null = null;
 
-  // 1. Setup Cosmetic Style Injection
+  // Dedicated style tag for CSS rules
   function ensureStyleTag(): HTMLStyleElement {
     if (!styleTag || !document.contains(styleTag)) {
       styleTag = document.getElementById('adshredder-cosmetic-styles') as HTMLStyleElement;
@@ -415,7 +415,7 @@ export const BUILTIN_COSMETIC_RULES: string[] = [
     }
   }
 
-  // Load saved rules for this domain
+  // Load saved custom rules for this domain
   const storageKey = `custom_rules_${hostname}`;
   chrome.storage.local.get([storageKey, 'master_enabled', `whitelist_${hostname}`], (result) => {
     const masterEnabled = result.master_enabled ?? true;
@@ -427,7 +427,7 @@ export const BUILTIN_COSMETIC_RULES: string[] = [
     updateActiveState(masterEnabled, isWhitelisted);
   });
 
-  // Listen to live toggles from popup in real-time across all tabs
+  // Listen to live toggles from popup across all open tabs
   chrome.storage.onChanged.addListener(() => {
     chrome.storage.local.get(['master_enabled', `whitelist_${hostname}`], (res) => {
       const master = res.master_enabled ?? true;
@@ -436,14 +436,14 @@ export const BUILTIN_COSMETIC_RULES: string[] = [
     });
   });
 
-  // Re-apply styles on DOM ready and continuously via MutationObserver
+  // Re-apply styles on DOM ready
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', applyCosmeticRules);
   } else {
     applyCosmeticRules();
   }
 
-  // Ensure style tag stays attached even if dynamic page wipes head
+  // Keep style tag attached if dynamic SPAs wipe head
   const observer = new MutationObserver(() => {
     if (!document.documentElement.hasAttribute('data-adshredder-off')) {
       if (!document.getElementById('adshredder-cosmetic-styles')) {
@@ -453,7 +453,7 @@ export const BUILTIN_COSMETIC_RULES: string[] = [
   });
   observer.observe(document.documentElement, { childList: true, subtree: true });
 
-  // 2. Listen to Popup Defuser Events from MAIN world
+  // Relay blocked popup event from main world
   window.addEventListener('__ADSHREDDER_POPUP_BLOCKED__', (e: Event) => {
     const customEvent = e as CustomEvent;
     const detail = customEvent.detail || {};
@@ -465,17 +465,15 @@ export const BUILTIN_COSMETIC_RULES: string[] = [
     }).catch(() => {});
   });
 
-  // 3. Handle Element Picker Callback
+  // Handle element picker result
   function handleRuleCreated(selector: string) {
     if (!customSelectors.includes(selector)) {
       customSelectors.push(selector);
       applyCosmeticRules();
 
-      // Save to chrome.storage.local
       chrome.storage.local.set({ [storageKey]: customSelectors }, () => {
-        console.log(`[AdShredder by Mojo] ✂️ Saved custom shred rule for ${hostname}:`, selector);
+        console.log(`[AdShredder] Saved custom rule for ${hostname}:`, selector);
         
-        // Notify background service worker
         chrome.runtime.sendMessage({
           type: 'ELEMENT_SHREDDED_STAT',
           hostname,
@@ -485,7 +483,7 @@ export const BUILTIN_COSMETIC_RULES: string[] = [
     }
   }
 
-  // 4. Runtime Message Listener (from Popup UI)
+  // Message listener from popup UI
   chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     if (message.type === 'START_ELEMENT_PICKER') {
       if (!pickerInstance) {

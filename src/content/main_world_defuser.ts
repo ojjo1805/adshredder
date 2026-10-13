@@ -1,17 +1,13 @@
 /**
- * AdShredder by Mojo - MAIN World Defuser
- * Injected directly into the website's execution context (world: "MAIN")
- * Intercepts abusive window.open calls, click-jacking traps, pop-unders,
- * and obliterates YouTube / HTML5 video ads and anti-adblock popups.
+ * AdShredder - Page Context Handler (world: "MAIN")
+ * Handles unprompted popup redirects and YouTube player state directly.
  */
 
 (function () {
-  // Prevent double-injection
   if ((window as any).__ADSHREDDER_DEFUSER_ACTIVE__) return;
   (window as any).__ADSHREDDER_DEFUSER_ACTIVE__ = true;
 
-  console.log('[AdShredder by Mojo] ⚡ MAIN World Defuser & Video Ad Annihilator active.');
-
+  // Track authentic user interactions so legit clicks / new tabs aren't blocked
   let lastUserActionTimestamp = 0;
 
   // 1. Track authentic user interactions
@@ -143,8 +139,7 @@
     const isSneakyPosition = features && features.includes('-999');
 
     if (isUnprompted || isSuspicious || isSneakyPosition) {
-      // Use console.log to avoid Chrome flagging this as an extension error
-      console.log(`[AdShredder by Mojo] 🛑 Blocked popup to: "${urlStr || 'blank'}" (time diff: ${timeSinceAction}ms)`);
+      console.log(`[AdShredder] Blocked popup: "${urlStr || 'blank'}" (time diff: ${timeSinceAction}ms)`);
       
       window.dispatchEvent(
         new CustomEvent('__ADSHREDDER_POPUP_BLOCKED__', {
@@ -242,21 +237,22 @@
     }
   };
 
-  // 3. YouTube & Video Ad Annihilator
-  const annihilateVideoAds = () => {
+  // YouTube player handling
+  // Speedup alone trips YT watch time telemetry; need to mute, jump to duration,
+  // fire 'ended' event, and call internal skip API.
+  const handleYouTubeAds = () => {
     if (document.documentElement.hasAttribute('data-adshredder-off')) return;
     const isYouTube = window.location.hostname.includes('youtube.com');
     const video = document.querySelector('video') as HTMLVideoElement | null;
     const moviePlayer = document.getElementById('movie_player') as any;
 
     if (isYouTube) {
-      // Check if YouTube is showing a video ad
       const adShowing =
         document.querySelector('.ad-showing, .ad-interrupting, .ytp-ad-player-overlay') !== null ||
         (moviePlayer && moviePlayer.classList?.contains('ad-showing'));
 
       if (video && adShowing) {
-        // Fast-forward video ad to completion at maximum speed (64x)
+        // mute first so user doesn't hear a 100ms blip of audio
         video.muted = true;
         try {
           video.playbackRate = 64.0;
@@ -268,18 +264,17 @@
           video.currentTime = video.duration;
         }
 
-        // Fire 'ended' event directly to notify YouTube's player that the ad is finished
+        // dispatch native ended event directly on the media element
         try {
           video.dispatchEvent(new Event('ended'));
         } catch {}
 
-        // Try calling player native skip
         if (moviePlayer && typeof moviePlayer.skipAd === 'function') {
           try { moviePlayer.skipAd(); } catch {}
         }
       }
 
-      // Auto-click any skip button that appears
+      // click skip button if rendered
       const skipButtons = document.querySelectorAll<HTMLElement>(
         '.ytp-ad-skip-button, .ytp-ad-skip-button-modern, .ytp-skip-ad-button, .ytp-ad-skip-button-slot button, .ytp-ad-preview-container'
       );
@@ -287,7 +282,7 @@
         try { btn.click(); } catch {}
       });
 
-      // Defuse YouTube Anti-Adblock warning modals
+      // remove the anti-adblock warning modal if YT pops it up
       const enforcementModal = document.querySelector('ytd-enforcement-message-view-model');
       if (enforcementModal) {
         enforcementModal.remove();
@@ -299,8 +294,8 @@
     }
   };
 
-  // Fast hyper-loop for instant video ad annihilation (60ms)
-  setInterval(annihilateVideoAds, 60);
+  // 60ms interval is plenty fast to skip without eating cpu cycles
+  setInterval(handleYouTubeAds, 60);
 
   // Run DOM scans
   if (document.readyState === 'loading') {

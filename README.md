@@ -1,63 +1,52 @@
-# ⚡ AdShredder by Mojo
+# AdShredder by Mojo
 
-> **Ultra-fast ad, popup and video ad shredder with an interactive element picker, zero bloat and 100% privacy.**
+A lightweight, no-nonsense Manifest V3 adblocker for Chromium browsers.
 
-<p align="center">
-  <img src="store_assets/promo_banner_16x9.jpg" alt="AdShredder by Mojo" width="100%" />
-</p>
+I built AdShredder because I got tired of two things: commercial blockers adding "acceptable ads" whitelists and corporate tracking, and YouTube constantly breaking video playback with anti-adblock detection banners. 
 
-[![Manifest V3](https://img.shields.io/badge/Manifest-V3-06b6d4?style=for-the-badge&logo=googlechrome&logoColor=white)](https://developer.chrome.com/docs/extensions/mv3/intro/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178c6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Vite](https://img.shields.io/badge/Built%20with-Vite-646cff?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
-[![Ko-fi](https://img.shields.io/badge/Support-Ko--fi-ff5e5b?style=for-the-badge&logo=kofi&logoColor=white)](https://ko-fi.com/mojo1805)
-[![License: MIT](https://img.shields.io/badge/License-MIT-10b981?style=for-the-badge)](LICENSE)
+Everything runs 100% locally in your browser. No telemetry pings, no account required, and no paid whitelists.
 
 ---
 
-## 🎯 Why AdShredder?
+## What it actually does
 
-The modern web has become bloated with intrusive ads, video interruptions, aggressive popunders, and corporate adblockers that sell your data or whitelist ads for profit.
+### 1. YouTube video ads & anti-adblock modals
+Instead of just aborting network requests (which trips YouTube's detection counter) or just turning up a speed slider (which gets caught by watch-time telemetry), AdShredder runs directly in the page context (`world: "MAIN"`):
+- Mutes audio on ad start so you don't hear a sudden burst of audio
+- Advances `currentTime` straight to the end and fires the native `ended` DOM event
+- Calls YouTube's internal `moviePlayer.skipAd()` function when available
+- Auto-clicks skip buttons in a ~60ms loop
+- Automatically removes the `ytd-enforcement-message-view-model` modal and unpauses the video if YouTube tries to block the screen
 
-**AdShredder by Mojo** was built with one goal: **Reclaim a clean, fast, and peaceful internet without compromises.**
+### 2. Cosmetic element collapsing
+Standard network blockers often leave behind empty gray boxes or broken layout frames. AdShredder applies targeted CSS rules to collapse ad wrappers and placeholders down to 0px so pages reflow naturally without dead spaces.
 
-* **Universal Browser Support:** Works out of the box on Google Chrome, Brave, Opera, Opera GX, Microsoft Edge, Vivaldi, and Arc.
-* **0% Telemetry & 0% Tracking:** Everything runs 100% locally in your browser. No external servers, no tracking pings.
-* **No "Acceptable Ads" Deals:** No advertiser can pay to bypass our filters.
-* **YouTube Video Ad Annihilator:** Fast-forwards ads at 64x speed and automatically skips interruptions seamlessly without triggering anti-adblock bans.
-* **Universal Element Collapsing:** Dead ad boxes, gray placeholder frames, and "ADVERTISEMENT" labels are collapsed to 0px so pages reflow naturally.
-* **Interactive Visual Element Picker:** Point and click on any annoying web element to permanently vaporize it from your screen.
+### 3. Click-to-hide element picker
+If a site has an annoying sticky banner, newsletter overlay, or sponsored widget that filters missed, click **"Shred an Element"** in the popup, point at it, and click. It saves the rule to `chrome.storage.local` so it stays gone whenever you visit that site again.
 
----
-
-## 🚀 Key Features
-
-### 1. 🎬 Video Ad Annihilator
-Runs directly in the page's execution context (`world: "MAIN"`):
-* Fast-forwards unavoidable video ads at 64x playback rate.
-* Auto-skips skip buttons within 60ms.
-* Defuses YouTube anti-adblock warning modals in real time.
-
-### 2. 📐 Universal Element Collapsing
-Eradicates the gaping gray holes and "ADVERTISEMENT" placeholders left behind by network-blocked ads. Fully tuned for major media publishers (Fandom, CBS, TVGuide, TVSpielfilm, News blogs).
-
-### 3. ✂️ Visual Element Picker
-Built using a closed Shadow DOM overlay in Electric Teal styling:
-* Real-time hover inspection with z-index elevation.
-* Immediate inline suppression and persistent saving to `chrome.storage.local`.
-
-### 4. ⚡ Native Manifest V3 DeclarativeNetRequest
-197+ high-impact global rules blocking advertising, tracking, gaming overlays (Agar.io, Playwire, Freestar), and regional networks (Baidu, Yandex, Daum AdFit, Speakol, Yektanet, Columbia) at the browser's C++ network level.
+### 4. Native DeclarativeNetRequest rules
+Blocks known ad networks, trackers, and popup redirect networks directly at the browser network layer using native Manifest V3 DNR rulesets.
 
 ---
 
-## 🛠️ Installation & Development
+## Browser Support
 
-### For Users (1-Click Install)
-Install directly from the [Chrome Web Store](https://chromewebstore.google.com/detail/adshredder-by-mojo/fhopbflmgfahghekojgpfingpahlmbde).
-* **Supported Browsers:** Google Chrome, Brave, Opera, Opera GX, Microsoft Edge, Vivaldi, Arc (works natively on all Chromium-based browsers).
+Works out of the box on all modern Chromium-based browsers:
+- Google Chrome
+- Brave Browser
+- Opera & Opera GX
+- Microsoft Edge
+- Vivaldi / Arc
 
-### For Developers (Manual / Unpacked)
-1. Clone this repository:
+---
+
+## Install & Development
+
+### For Users
+Install directly with 1 click from the [Chrome Web Store](https://chromewebstore.google.com/detail/adshredder-by-mojo/fhopbflmgfahghekojgpfingpahlmbde).
+
+### Running from source (unpacked)
+1. Clone the repo:
    ```bash
    git clone https://github.com/ojjo1805/adshredder.git
    cd adshredder
@@ -66,32 +55,32 @@ Install directly from the [Chrome Web Store](https://chromewebstore.google.com/d
    ```bash
    pnpm install
    ```
-3. Build the extension:
+3. Build the project:
    ```bash
    pnpm run build
    ```
-4. In Chrome, navigate to `chrome://extensions/`:
-   * Enable **Developer mode** (top right toggle).
-   * Click **Load unpacked** (Entpackte Erweiterung laden).
-   * Select the `./dist` folder inside this repository.
+4. Load in your browser:
+   - Head over to `chrome://extensions/`
+   - Turn on **Developer mode** (toggle in the top-right corner)
+   - Click **Load unpacked** (Entpackte Erweiterung laden)
+   - Select the `./dist` folder inside this directory
 
 ---
 
-## ☕ Support Independent Development
+## Support & Donations
 
-AdShredder by Mojo is completely free, open-source, and independent. If it saves your time and sanity, you can support development here:
+AdShredder is completely free and open source. If it saves your sanity while browsing and you want to support independent development:
 
-* ☕ **Ko-fi:** [https://ko-fi.com/mojo1805](https://ko-fi.com/mojo1805) *(Card, PayPal, Apple Pay, Google Pay)*
-* 💎 **Crypto Portal (300+ Coins):** [https://nowpayments.io/donation/adshredder_mojo](https://nowpayments.io/donation/adshredder_mojo) *(DOGE, BTC, ETH & more)*
+- ☕ **Ko-fi:** [https://ko-fi.com/mojo1805](https://ko-fi.com/mojo1805)
+- 💎 **Crypto Portal:** [https://nowpayments.io/donation/adshredder_mojo](https://nowpayments.io/donation/adshredder_mojo)
 
-### Direct Wallets
-* **Bitcoin (BTC):** `bc1qcudwfqpsjqlrwqrn8qrmuyl2tg4nmcnyv27nx4`
-* **Ethereum (ETH / USDT):** `0x0daCbcc3B449e3bD7f49ED64F85C16a271fA7f06`
-* **Solana (SOL):** `AAY9oCC2rKKzofpJvPw2ocnqJPTg26AMaBhDTqxJE3F3`
-* **Dogecoin (DOGE):** `DDwXee7WVSwDayUqe7x3PN5nXeuKMyDj3p`
+Direct Wallets:
+- **BTC:** `bc1qcudwfqpsjqlrwqrn8qrmuyl2tg4nmcnyv27nx4`
+- **ETH:** `0x0daCbcc3B449e3bD7f49ED64F85C16a271fA7f06`
+- **SOL:** `AAY9oCC2rKKzofpJvPw2ocnqJPTg26AMaBhDTqxJE3F3`
+- **DOGE:** `DDwXee7WVSwDayUqe7x3PN5nXeuKMyDj3p`
 
 ---
 
-## 📄 Privacy Policy & License
-* Read our [Privacy Policy](PRIVACY_POLICY.md) (100% Zero Data Collection Guarantee).
-* Released under the [MIT License](LICENSE).
+## License
+MIT License. If you run into a broken site or layout glitch, feel free to open an issue or PR!
