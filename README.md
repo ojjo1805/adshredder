@@ -20,6 +20,7 @@ The modern web has become bloated with intrusive ads, video interruptions, aggre
 
 **AdShredder by Mojo** was built with one goal: **Reclaim a clean, fast, and peaceful internet without compromises.**
 
+* **Universal Browser Support:** Works out of the box on Google Chrome, Brave, Opera, Opera GX, Microsoft Edge, Vivaldi, and Arc.
 * **0% Telemetry & 0% Tracking:** Everything runs 100% locally in your browser. No external servers, no tracking pings.
 * **No "Acceptable Ads" Deals:** No advertiser can pay to bypass our filters.
 * **YouTube Video Ad Annihilator:** Fast-forwards ads at 64x speed and automatically skips interruptions seamlessly without triggering anti-adblock bans.
@@ -51,8 +52,9 @@ Built using a closed Shadow DOM overlay in Electric Teal styling:
 
 ## 🛠️ Installation & Development
 
-### For Users
-Install directly with 1 click from the [Chrome Web Store](https://chromewebstore.google.com/detail/adshredder-by-mojo/fhopbflmgfahghekojgpfingpahlmbde) *(Publishing in progress)*.
+### For Users (1-Click Install)
+Install directly from the [Chrome Web Store](https://chromewebstore.google.com/detail/adshredder-by-mojo/fhopbflmgfahghekojgpfingpahlmbde).
+* **Supported Browsers:** Google Chrome, Brave, Opera, Opera GX, Microsoft Edge, Vivaldi, Arc (works natively on all Chromium-based browsers).
 
 ### For Developers (Manual / Unpacked)
 1. Clone this repository:

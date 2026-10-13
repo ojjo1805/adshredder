@@ -28,12 +28,15 @@ Use these pre-crafted details when creating your new item in the [Chrome Web Sto
 ```markdown
 Reclaim a clean, fast, and peaceful internet with AdShredder by Mojo.
 
-Built from the ground up for Chrome Manifest V3, AdShredder is a modern, ultra-lightweight ad and popup shredder with a radical commitment to speed, documentation integrity, and true zero-telemetry privacy.
+Built from the ground up for Manifest V3, AdShredder is a modern, ultra-lightweight ad and popup shredder with a radical commitment to speed, documentation integrity, and true zero-telemetry privacy.
 
 ⚡ KEY HIGHLIGHTS:
 
 • 🎬 Seamless Video Ad Annihilator:
 Tired of disruptive video ads and annoying anti-adblock modals? AdShredder's intelligent defuser fast-forwards ads at 64x speed and automatically skips interruptions seamlessly.
+
+• 🌐 Universal Browser Support (Works Out of the Box):
+Native 1-click install for Google Chrome, Brave, Opera & Opera GX, Microsoft Edge, Vivaldi, and Arc. No extra extensions or complex setup required.
 
 • 🛡️ Zero Bloat & Zero Telemetry:
 Unlike commercial adblockers, AdShredder has NO corporate investors, NO data-mining SDKs, and NO paid "Acceptable Ads" backdoor deals. 100% of blocking happens locally inside your browser. Zero outgoing telemetry.
