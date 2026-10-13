@@ -21,17 +21,94 @@
     }
   };
 
-  ['pointerdown', 'mousedown', 'keydown', 'touchend'].forEach((evt) => {
+  ['pointerdown', 'mousedown', 'keydown', 'touchend', 'click', 'auxclick'].forEach((evt) => {
     window.addEventListener(evt, recordUserAction, { capture: true, passive: true });
   });
 
   // Preserve native window.open
   const nativeWindowOpen = window.open.bind(window);
 
-  // Suspicious popup URL patterns
+  // Trusted domains where popups / new tabs and UI overlays must NEVER be blocked
+  // (Webmail, Payments, Crypto, OAuth & Productivity platforms)
+  const TRUSTED_DOMAINS = [
+    // Webmail & Email Providers
+    'outlook.live.com',
+    'outlook.office.com',
+    'office.com',
+    'live.com',
+    'microsoft.com',
+    'mail.google.com',
+    'mail.yahoo.com',
+    'proton.me',
+    'protonmail.com',
+    'web.de',
+    'gmx.net',
+    'gmx.de',
+    't-online.de',
+    'icloud.com',
+
+    // Financial, Payments & Crypto Gateways
+    'nowpayments.io',
+    'account.nowpayments.io',
+    'nowpayments.net',
+    'paypal.com',
+    'stripe.com',
+    'coinbase.com',
+    'binance.com',
+    'kraken.com',
+    'wise.com',
+    'klarna.com',
+
+    // Authentication & OAuth Providers
+    'facebook.com',
+    'm.facebook.com',
+    'fb.com',
+    'accounts.google.com',
+    'google.com',
+    'appleid.apple.com',
+    'apple.com',
+    'login.live.com',
+    'microsoftonline.com',
+    'github.com',
+    'gitlab.com',
+    'discord.com',
+    'twitter.com',
+    'x.com',
+
+    // Productivity & Cloud Suites
+    'docs.google.com',
+    'drive.google.com',
+    'calendar.google.com',
+    'slack.com',
+    'notion.so',
+    'trello.com',
+    'jira.com',
+    'atlassian.net',
+    'amazon.com'
+  ];
+
+  function isTrustedContext(urlStr: string): boolean {
+    const currentHost = window.location.hostname.toLowerCase();
+    const isCurrentTrusted = TRUSTED_DOMAINS.some(
+      (d) => currentHost === d || currentHost.endsWith('.' + d)
+    );
+    if (isCurrentTrusted) return true;
+
+    if (!urlStr) return false;
+    try {
+      const targetHost = new URL(urlStr, window.location.href).hostname.toLowerCase();
+      return TRUSTED_DOMAINS.some(
+        (d) => targetHost === d || targetHost.endsWith('.' + d)
+      );
+    } catch {
+      return false;
+    }
+  }
+
+  // Suspicious popup URL patterns (Only known malicious ad-network domains)
   const POPUP_KEYWORDS = [
     'popads', 'popcash', 'propeller', 'exoclick', 'adsterra', 'clickadu',
-    'adcash', 'admaven', 'traffichaus', 'syndication', 'onclick', 'redirect',
+    'adcash', 'admaven', 'traffichaus', 'syndication', 'onclick',
     'trafficstars', 'juicyads', 'hilltopads', 'zeroredirect', 'rtmark'
   ];
 
@@ -39,33 +116,6 @@
     if (!url || url === 'about:blank') return false;
     const lower = url.toLowerCase();
     return POPUP_KEYWORDS.some((kw) => lower.includes(kw));
-  }
-
-  // Whitelist for authentic login / OAuth providers
-  function isLegitimateAuthProvider(url: string): boolean {
-    if (!url) return false;
-    try {
-      const u = new URL(url, window.location.href);
-      const host = u.hostname.toLowerCase();
-      const AUTH_DOMAINS = [
-        'facebook.com',
-        'm.facebook.com',
-        'fb.com',
-        'accounts.google.com',
-        'google.com',
-        'appleid.apple.com',
-        'apple.com',
-        'login.live.com',
-        'microsoftonline.com',
-        'github.com',
-        'discord.com',
-        'twitter.com',
-        'x.com'
-      ];
-      return AUTH_DOMAINS.some((domain) => host === domain || host.endsWith('.' + domain));
-    } catch {
-      return false;
-    }
   }
 
   // Intercept window.open
@@ -83,13 +133,12 @@
       return nativeWindowOpen(url, target, features);
     }
 
-    // ALWAYS allow legitimate authentication popups (Facebook Login, Google Login, etc.)
-    if (isLegitimateAuthProvider(urlStr)) {
-      console.log(`[AdShredder by Mojo] 🔑 Permitted legitimate OAuth login popup: ${urlStr}`);
+    // ALWAYS allow popups on or to trusted domains (Outlook, NowPayments, Gmail, OAuth, etc.)
+    if (isTrustedContext(urlStr)) {
       return nativeWindowOpen(url, target, features);
     }
 
-    const isUnprompted = timeSinceAction > 2500;
+    const isUnprompted = timeSinceAction > 5000;
     const isSuspicious = isSuspiciousUrl(urlStr);
     const isSneakyPosition = features && features.includes('-999');
 
@@ -118,33 +167,8 @@
   };
 
   // 2. Anti-Clickjacking: Defuse invisible full-screen overlay traps
-  // Whitelist trusted productivity apps where clickjacking is non-existent
-  const TRUSTED_OVERLAY_DOMAINS = [
-    'outlook.live.com',
-    'outlook.office.com',
-    'office.com',
-    'live.com',
-    'microsoft.com',
-    'mail.google.com',
-    'docs.google.com',
-    'drive.google.com',
-    'calendar.google.com',
-    'google.com',
-    'github.com',
-    'gitlab.com',
-    'slack.com',
-    'notion.so',
-    'trello.com',
-    'jira.com',
-    'atlassian.net',
-    'apple.com',
-    'icloud.com',
-    'amazon.com',
-    'paypal.com'
-  ];
-
-  const isTrustedDomain = TRUSTED_OVERLAY_DOMAINS.some(
-    (d) => window.location.hostname === d || window.location.hostname.endsWith('.' + d)
+  const isTrustedDomain = TRUSTED_DOMAINS.some(
+    (d) => window.location.hostname.toLowerCase() === d || window.location.hostname.toLowerCase().endsWith('.' + d)
   );
 
   const removeClickjackingOverlays = () => {
