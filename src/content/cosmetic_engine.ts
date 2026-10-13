@@ -361,8 +361,18 @@ export const BUILTIN_COSMETIC_RULES: string[] = [
   '[aria-label="publicidad" i]',
   '[aria-label="реклама" i]',
   'shreddit-ad-post',
+  'shreddit-comments-page-ad',
+  '.shreddit-comments-page-ad',
+  'template-loader[name="comments-page-ad"]',
+  'shreddit-post[adv]',
+  '.ad-format-container',
+  '.ad-format-content',
+  '.promotedlink',
   '[data-testid="ad-post"]',
-  '[data-ad-click]'
+  '[data-ad-click]',
+  '[data-ad-click-location]',
+  '[data-ad-click-action]',
+  '[data-ad-event]'
 ];
 
 (function () {
