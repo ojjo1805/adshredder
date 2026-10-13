@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "AdShredder by Mojo",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Ultra-fast ad, popup and video ad shredder with an element picker, zero bloat and 100% privacy.",
   "permissions": [
     "declarativeNetRequest",
